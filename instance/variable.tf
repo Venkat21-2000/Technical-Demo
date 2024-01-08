@@ -14,5 +14,3 @@ variable "private_instance_name" {}
 variable "private_subnet_id" {}
 variable "public_subnet_cidr" {}
 variable "private_key_path" {}
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
