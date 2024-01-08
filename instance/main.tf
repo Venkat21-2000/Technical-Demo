@@ -59,30 +59,18 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
   key_name               = var.key_name
 
-  provisioner "file" {
-    source      = var.private_key_path
-    destination = "/home/ec2-user/private_key.pem"
-
-    connection {
-      type        = "ssh"
-      user        = "ec2-user"
-      private_key = file(var.private_key_path)
-      host        = self.public_ip # Add this line
-
-    }
-  }
-  
+ 
   provisioner "remote-exec" {
     inline = [
-      "chmod 400 /home/ec2-user/private_key.pem",
+      "echo '${var.private_key_pem}' > /home/ec2-user/private_key.pem",
+      "chmod 400 /home/ec2-user/private_key.pem"
     ]
 
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file(var.private_key_path)
-      host        = self.public_ip # Add this line
-
+      private_key = var.private_key_pem
+      host        = self.public_ip
     }
   }
 

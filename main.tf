@@ -22,7 +22,7 @@ module "ec2" {
 
   region                        = "ap-northeast-1"
   vpc_id                        = module.vpc.vpc_id
-  ami                           = "ami-0af63357f50f3a38f"
+  ami                           = "ami-04b2b41f684d4bd33"
   instance_type                 = "t2.micro"
   public_subnet_id              = module.vpc.public_subnet_id
   key_name                      = module.ssh.key_name
@@ -49,6 +49,7 @@ EOF
   bastion_instance_name         = "BastionHost"
   private_instance_name         = "PrivateInstance"
   public_subnet_cidr            =  module.vpc.public_subnet_cidr # Pass the public_subnet_cidr here
+  private_key_pem = module.ssh.private_key_pem
 }
 
 
@@ -56,7 +57,7 @@ module "s3" {
   source = "./s-3"
 
   region            = "ap-northeast-1"
-  bucket_name       = "your-unique-bucketname"
+  bucket_name       = "my-bucket-venky-tech"
   s3_bucket_policy  = <<EOF
 {
   "Version": "2012-10-17",
@@ -82,7 +83,7 @@ EOF
 
 module "ssh" {
   source = "./ssh" 
-  key_name = "ec2-key" 
+  key_name = "ec2-key1" 
 
 }
 
