@@ -22,7 +22,7 @@ module "ec2" {
 
   region                        = "ap-northeast-1"
   vpc_id                        = module.vpc.vpc_id
-  ami                           = "ami-09f0a651f0e65cfee"
+  ami                           = "ami-0af63357f50f3a38f"
   instance_type                 = "t2.micro"
   public_subnet_id              = module.vpc.public_subnet_id
   key_name                      = module.ssh.key_name
@@ -49,9 +49,8 @@ EOF
   bastion_instance_name         = "BastionHost"
   private_instance_name         = "PrivateInstance"
   public_subnet_cidr            =  module.vpc.public_subnet_cidr # Pass the public_subnet_cidr here
-  aws_access_key = "AKIA4KYJXNXWR4CXKEMB"
-  aws_secret_key = "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"
 }
+
 
 module "s3" {
   source = "./s-3"
