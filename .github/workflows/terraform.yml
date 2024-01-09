@@ -17,6 +17,12 @@ jobs:
     if: github.event.inputs.uninstall == 'yes'
 
     steps:
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -39,6 +45,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
