@@ -1,13 +1,40 @@
 name: Terraform Plan and Apply
 
 on:
+  workflow_dispatch:
+    inputs:
+      uninstall:
+        description: 'Destroy'
+        required: true
+        default: 'no'
   push:
     branches:
       - main
 
 jobs:
+  uninstall:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.uninstall == 'yes'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: destroy resources
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.14.7
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+
   terraform:
     runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' || github.event.inputs.uninstall == 'no'   
 
     steps:
       - name: Checkout code
