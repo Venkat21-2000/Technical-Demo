@@ -87,3 +87,20 @@ module "ssh" {
 
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "tfstate-bucket-11"
+    key            = "terraform.tfstate"
+    region         = "ap-northeast-1"
+    encrypt        = true
+    # dynamodb_table = "terraform_locks"s
+  }
+}
+
+resource "aws_s3_bucket_object" "private_key" {
+  bucket = "tfstate-bucket-11"
+  key    = "private_key.pem"
+  source = module.ssh.private_key_path  
+  acl    = "private"
+}
+
