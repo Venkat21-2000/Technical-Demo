@@ -28,7 +28,7 @@ module "ec2" {
   key_name                      = module.ssh.key_name
   bastion_sg_name               = "BastionSecurityGroup"
   private_instance_sg_name      = "PrivateInstanceSecurityGroup"
-  private_instance_role_name    = "private-instance-s3-access-12"
+  private_instance_role_name    = "private-instance-s3-accesss-12"
   private_subnet_id             = module.vpc.private_subnet_id
   private_key_path = module.ssh.private_key_path
   assume_role_policy            = <<EOF
@@ -57,7 +57,7 @@ module "s3" {
   source = "./s-3"
 
   region            = "ap-northeast-1"
-  bucket_name       = "my-bucket-venky-tech-12"
+  bucket_name       = "my-bucket-venky-tech"
   s3_bucket_policy  = <<EOF
 {
   "Version": "2012-10-17",
