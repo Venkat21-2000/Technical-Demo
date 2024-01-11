@@ -45,7 +45,7 @@ module "ec2" {
  ]
 }
 EOF
-  policy_arn                    = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+  policy_arn                    = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
   bastion_instance_name         = "BastionHost"
   private_instance_name         = "PrivateInstance"
   public_subnet_cidr            =  module.vpc.public_subnet_cidr # Pass the public_subnet_cidr here
