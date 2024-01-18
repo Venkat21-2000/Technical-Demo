@@ -19,6 +19,14 @@ resource "aws_security_group" "bastion_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # Allow outbound traffic to AWS services and allow incoming traffic from private instance
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    security_groups = [aws_security_group.private_instance_sg.id]
+  }
+
   tags = {
     Name = var.bastion_sg_name
   }
@@ -41,15 +49,55 @@ resource "aws_security_group" "private_instance_sg" {
     cidr_blocks = [var.public_subnet_cidr]
   }
 
+  # Allow outbound traffic to AWS services, but deny access to the specific S3 bucket
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    prefix_list_ids = ["pl-61a54008"]  # Replace with the correct prefix list ID for your S3 region
   }
 
   tags = {
     Name = var.private_instance_sg_name
   }
+}
+
+resource "aws_iam_role" "bastion_role" {
+  name = "bastion-role"
+  path = "/"
+
+  assume_role_policy = var.assume_role_policy_private
+}
+
+resource "aws_iam_instance_profile" "bastion_profile" {
+  name = "bastion-profile"
+  role = aws_iam_role.bastion_role.name
+
+}
+
+resource "aws_iam_role_policy" "s3_access_policy" {
+  name   = "s3-access-policy"
+  role   = aws_iam_role.bastion_role.name
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListAllMyBuckets",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::${var.bucket_name}/*"
+      ]
+    }
+  ]
+}
+EOF
 }
 
 resource "aws_instance" "bastion" {
@@ -59,7 +107,6 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
   key_name               = var.key_name
 
- 
   provisioner "remote-exec" {
     inline = [
       "echo '${var.private_key_pem}' > /home/ec2-user/private_key.pem",
@@ -74,6 +121,8 @@ resource "aws_instance" "bastion" {
     }
   }
 
+  iam_instance_profile = aws_iam_instance_profile.bastion_profile.name
+
   tags = {
     Name = var.bastion_instance_name
   }
@@ -83,7 +132,7 @@ resource "aws_iam_role" "private_instance_role" {
   name = var.private_instance_role_name
   path = "/"
 
-  assume_role_policy = var.assume_role_policy
+  assume_role_policy = var.assume_role_policy_private
 }
 
 resource "aws_iam_role_policy_attachment" "private_instance_policy" {
@@ -109,9 +158,11 @@ resource "aws_instance" "private_instance" {
     command = "sleep 120"
   }
 
-    iam_instance_profile = aws_iam_instance_profile.private_instance_profile.name
+  iam_instance_profile = aws_iam_instance_profile.private_instance_profile.name
 
   tags = {
     Name = var.private_instance_name
   }
 }
+
+
