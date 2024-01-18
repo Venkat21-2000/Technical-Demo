@@ -47,19 +47,15 @@ module "ec2" {
     }
  ]
 }
-
 EOF
-
 
   # IAM Policy ARN for EC2 Instances
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-
   bastion_instance_name     = "BastionHost"
   private_instance_name     = "PrivateInstance"
   public_subnet_cidr        = module.vpc.public_subnet_cidr # Pass the public_subnet_cidr here
   private_key_pem           = module.ssh.private_key_pem
   bucket_name = module.s3.bucket_name
-  
 }
 
 # Module Configuration for S3 Bucket
@@ -67,8 +63,6 @@ module "s3" {
   source           = "./s-3"
   region           = "ap-northeast-1"
   bucket_name      = "my-bucket-venky-tech-12"
-
-  # S3 Bucket Policy
   s3_bucket_policy  = <<EOF
 {
   "Version": "2012-10-17",
