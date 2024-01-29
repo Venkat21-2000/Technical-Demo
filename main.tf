@@ -27,9 +27,9 @@ module "ec2" {
   instance_type             = "t2.micro"
   public_subnet_id          = module.vpc.public_subnet_id
   key_name                  = module.ssh.key_name
-  bastion_sg_name           = "BastionSecurityGroup"
+  bastion_sg_name           = "BastionSecurityGroup11"
   private_instance_sg_name  = "PrivateInstanceSecurityGroup"
-  private_instance_role_name= "private-instance-s3"
+  private_instance_role_name= "private-instance-s3111"
   private_subnet_id         = module.vpc.private_subnet_id
   private_key_path          = module.ssh.private_key_path
 
@@ -62,7 +62,7 @@ EOF
 module "s3" {
   source           = "./s-3"
   region           = "ap-northeast-1"
-  bucket_name      = "my-bucket-venky-tech-12"
+  bucket_name      = "my-bucket-venky-tech-123"
   s3_bucket_policy  = <<EOF
 {
   "Version": "2012-10-17",
