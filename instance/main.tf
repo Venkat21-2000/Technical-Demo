@@ -63,7 +63,7 @@ resource "aws_security_group" "private_instance_sg" {
 }
 
 resource "aws_iam_role" "bastion_role" {
-  name = "bastion-role"
+  name = "bastion-role1111"
   path = "/"
 
   assume_role_policy = var.assume_role_policy_private
