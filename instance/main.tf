@@ -70,7 +70,7 @@ resource "aws_iam_role" "bastion_role" {
 }
 
 resource "aws_iam_instance_profile" "bastion_profile" {
-  name = "bastion-profile"
+  name = "bastion-profile123"
   role = aws_iam_role.bastion_role.name
 
 }
